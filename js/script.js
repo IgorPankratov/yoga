@@ -113,10 +113,37 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   more.addEventListener("click", showOverlay);
-  
+
   close.addEventListener("click", closeOverlay);
 
   descrBtns.forEach((item) => {
-    item.addEventListener("click", showOverlay)
+    item.addEventListener("click", showOverlay);
+  });
+
+  // Form
+
+  let message = {
+    loading: "Загрузка...",
+    success: "Спасибо! Скоро мы с вами свяжемся!",
+    failure: "Что-то пошло не так...",
+  };
+
+  let form = this.document.querySelector(".main-form"),
+    input = form.getElementsByTagName("input"),
+    statusMessage = this.document.createElement("div"); // элемент для отображения статуса отправки формы
+
+  statusMessage.classList.add("status");
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    form.appendChild(statusMessage); // добавляем поле со статусом в форму
+
+    /*Создаем запрос*/
+    let request = new XMLHttpRequest();
+    request.open("POST", "server.php"); // настроили запрос
+    request.setRequestHeader(
+      "Content-Type",
+      "application/x-www-form-urlencoded",
+    ); // настройка заголовков. Говорим, что наш контент будет содержать данные полученные из формы
   });
 });
