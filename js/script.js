@@ -126,6 +126,7 @@ window.addEventListener("DOMContentLoaded", function () {
     loading: "Загрузка...",
     success: "Спасибо! Скоро мы с вами свяжемся!",
     failure: "Что-то пошло не так...",
+    empty: "",
   };
 
   let form = this.document.querySelector(".main-form"),
@@ -141,15 +142,37 @@ window.addEventListener("DOMContentLoaded", function () {
     /*Создаем запрос*/
     let request = new XMLHttpRequest();
     request.open("POST", "server.php"); // настроили запрос
+    // request.setRequestHeader(
+    //   "Content-Type",
+    //   "application/x-www-form-urlencoded",
+    // ); // настройка заголовков. Говорим, что наш контент будет содержать данные полученные из формы
     request.setRequestHeader(
       "Content-Type",
-      "application/x-www-form-urlencoded",
-    ); // настройка заголовков. Говорим, что наш контент будет содержать данные полученные из формы
+      "application/json;charset=utf-8",
+    ); // настройка заголовков если отправляем в формате JSON. Говорим, что наш контент будет содержать данные JSON 
+
 
     /* Необходимо получить данные, которые ввел пользователь. Используем встроенный объект FormData */
 
     let formData = new FormData(form);
-    request.send(formData);
+
+    /* Если надо отправить данные в формате JSON, то нужно преобразовать объект FormData */
+
+    let obj = {}; // создаём промежуточный объект
+
+    formData.forEach(function(value,key) {
+      obj[key] = value;
+    });
+
+    let json = JSON.stringify(obj); // пребразовали промежуточный объект (obj) в формат JSON
+
+    // /* отправляем данные на сервер */
+    // request.send(formData);
+
+    /* меняем тело нашего запроса и отправляем данные на сервер */
+    request.send(json);
+
+    /* Сообщаем клиенту о статусе отправления */
 
     request.addEventListener('readystatechange', function() {
       if(request.readyState < 4) {
@@ -159,6 +182,13 @@ window.addEventListener("DOMContentLoaded", function () {
       } else {
         statusMessage.innerHTML = message.failure;
       }
-    })
+    });
+
+    /* После отправки данных формы очищаем поля форм */
+
+    for (let i = 0; i < input.length; i++) {
+      input[i].value = "";
+      statusMessage.innerHTML = message.empty;
+    }
   });
 });
