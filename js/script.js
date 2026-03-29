@@ -145,5 +145,20 @@ window.addEventListener("DOMContentLoaded", function () {
       "Content-Type",
       "application/x-www-form-urlencoded",
     ); // настройка заголовков. Говорим, что наш контент будет содержать данные полученные из формы
+
+    /* Необходимо получить данные, которые ввел пользователь. Используем встроенный объект FormData */
+
+    let formData = new FormData(form);
+    request.send(formData);
+
+    request.addEventListener('readystatechange', function() {
+      if(request.readyState < 4) {
+        statusMessage.innerHTML = message.loading;
+      } else if (request.readyState === 4 && request.status == 200) {
+        statusMessage.innerHTML = message.success;
+      } else {
+        statusMessage.innerHTML = message.failure;
+      }
+    })
   });
 });
