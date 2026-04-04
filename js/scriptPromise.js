@@ -172,21 +172,24 @@ window.addEventListener("DOMContentLoaded", function () {
 
       const json = JSON.stringify(obj);
 
-      fetch("server.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: json,
+      /*Создаем запрос*/
+      let request = new XMLHttpRequest();
+      request.open("POST", "server.php"); // настроили запрос
+      request.setRequestHeader(
+        "Content-Type",
+        "application/json;charset=utf-8",
+      ); // настройка заголовков если отправляем в формате JSON. Говорим, что наш контент будет содержать данные JSON
+
+      /* меняем тело нашего запроса и отправляем данные на сервер */
+      request.send(json);
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => resolve(data))
-        .catch((error) => reject(error));
-    });
+      .then((data) => resolve(data))
+      .catch((error) => reject(error));
   }
 });
