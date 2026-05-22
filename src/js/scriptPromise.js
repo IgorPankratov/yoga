@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", function () {
   // TIMER
 
   // Дата окончания отсчёта
-  let deadline = "2026-03-16";
+  let deadline = "2026-09-03";
 
   // Узнаём промежуток времени между текущим временем и дедлайном
   function getTimeRemaining(endtime) {
